@@ -39,8 +39,10 @@ jobs:
         sudo mv migrate /usr/bin/migrate
         which migrate
 
-    - name: Run Migration
-      run: make migrateup
-
     - name: Run Test
-      run: make test
+      run: |
+        make migrateup
+        make test
+      env:
+        DB_URL: postgres://postgres:postgres@localhost:5432/simplebank?sslmode=disable
+        SERVER_ADDR: 0.0.0.0:8000
