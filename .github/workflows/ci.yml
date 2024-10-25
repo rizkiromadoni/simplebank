@@ -43,6 +43,3 @@ jobs:
       run: |
         make migrateup
         make test
-      env:
-        DB_URL: postgres://postgres:postgres@localhost:5432/simplebank?sslmode=disable
-        SERVER_ADDR: 0.0.0.0:8000
