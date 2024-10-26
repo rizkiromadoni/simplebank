@@ -24,6 +24,8 @@ func NewServer(store db.Store) *Server {
 		c.JSON(200, gin.H{"message": "Hello World!"})
 	})
 
+	router.POST("/users", server.createUser)
+
 	router.GET("/accounts/:id", server.getAccount)
 	router.POST("/accounts", server.createAccount)
 
