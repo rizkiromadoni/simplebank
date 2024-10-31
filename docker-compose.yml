@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:14-alpine
     environment:
-      - POSTGRES_USER=root
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=simplebank
     ports:
@@ -15,7 +15,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_URL=postgres://root:postgres@postgres:5432/simplebank?sslmode=disable
+      - DB_URL=postgres://postgres:postgres@postgres:5432/simplebank?sslmode=disable
     depends_on:
       - postgres
     entrypoint: ["/app/wait-for.sh", "postgres:5432", "--", "sh", "/app/start.sh"]
