@@ -10,10 +10,16 @@ sqlc:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/rizkiromadoni/simplebank/db/sqlc Store
 
+dbschema:
+	dbml2sql --postgres -o doc/schema.sql doc/db.dbml
+
+dbdocs:
+	dbdocs build doc/db.dbml
+
 test:
 	go test -v -cover ./...
 
 start:
 	go run main.go
 
-.PHONY: migrateup migratedown sqlc mock test start
+.PHONY: migrateup migratedown sqlc mock dbschema dbdocs test start
