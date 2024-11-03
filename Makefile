@@ -16,10 +16,16 @@ dbschema:
 dbdocs:
 	dbdocs build doc/db.dbml
 
+proto:
+	rm -rf pb/*.go
+	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+    --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+    proto/*.proto
+
 test:
 	go test -v -cover ./...
 
 start:
 	go run main.go
 
-.PHONY: migrateup migratedown sqlc mock dbschema dbdocs test start
+.PHONY: migrateup migratedown sqlc mock dbschema dbdocs proto test start
