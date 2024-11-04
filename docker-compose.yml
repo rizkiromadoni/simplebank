@@ -18,5 +18,4 @@ services:
       - DB_URL=postgres://postgres:postgres@postgres:5432/simplebank?sslmode=disable
     depends_on:
       - postgres
-    entrypoint: ["/app/wait-for.sh", "postgres:5432", "--", "sh", "/app/start.sh"]
-    command: ["/app/main"]
+    command: sh -c '/app/wait-for.sh postgres:5432 -- /app/main'
