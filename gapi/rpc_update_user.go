@@ -16,9 +16,18 @@ import (
 )
 
 func (s *Server) UpdateUser(c context.Context, req *proto.UpdateUserRequest) (*proto.UpdateUserResponse, error) {
+	authPayload, err := s.authorizeUser(c)
+	if err != nil {
+		return nil, unauthenticatedError(err)
+	}
+
 	violations := validateUpdateUserRequest(req)
 	if len(violations) > 0 {
 		return nil, invalidArgumentError(violations)
+	}
+
+	if authPayload.Username != req.GetUsername() {
+		return nil, status.Errorf(codes.PermissionDenied, "unauthorized user")
 	}
 
 	arg := db.UpdateUserParams{
