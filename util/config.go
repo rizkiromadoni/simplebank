@@ -1,6 +1,7 @@
 package util
 
 import (
+	"flag"
 	"time"
 
 	"github.com/spf13/viper"
@@ -17,8 +18,14 @@ type Config struct {
 
 func LoadConfig(path string) (config Config, err error) {
 	viper.AddConfigPath(path)
-	viper.SetConfigName("app")
-	viper.SetConfigType("env")
+
+	if flag.Lookup("test.v") == nil {
+		viper.SetConfigName("app")
+		viper.SetConfigType("env")
+	} else {
+		viper.SetConfigName("test")
+		viper.SetConfigType("env")
+	}
 
 	viper.AutomaticEnv()
 
