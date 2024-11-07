@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Env                  string        `mapstructure:"ENV"`
 	DBURL                string        `mapstructure:"DB_URL"`
+	RedisAddress         string        `mapstructure:"REDIS_ADDRESS"`
 	HTTPServerAddr       string        `mapstructure:"HTTP_SERVER_ADDR"`
 	GRPCServerAddr       string        `mapstructure:"GRPC_SERVER_ADDR"`
 	TokenSymetricKey     string        `mapstructure:"TOKEN_SYMETRIC_KEY"`

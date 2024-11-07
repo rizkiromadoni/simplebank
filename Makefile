@@ -26,10 +26,13 @@ proto:
     proto/*.proto
 	statik -src=./doc/swagger -dest=./doc
 
+redis:
+	docker run -d --name redis -p 6379:6379 redis:7.4-alpine
+
 test:
 	go test -v -cover ./...
 
 start:
 	go run main.go
 
-.PHONY: migrateup migratedown sqlc mock dbschema dbdocs proto test start
+.PHONY: migrateup migratedown sqlc mock dbschema dbdocs proto redis test start
