@@ -1,3 +1,6 @@
+newmigration:
+	migrate create -ext sql -dir db/migration -seq ${name}
+
 migrateup:
 	migrate -path db/migration -database "postgres://postgres:postgres@localhost:5432/simplebank?sslmode=disable" -verbose up
 
@@ -35,4 +38,4 @@ test:
 start:
 	go run main.go
 
-.PHONY: migrateup migratedown sqlc mock dbschema dbdocs proto redis test start
+.PHONY: newmigration migrateup migratedown sqlc mock dbschema dbdocs proto redis test start

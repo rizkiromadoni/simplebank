@@ -7,6 +7,8 @@ import (
 
 	"github.com/hibiken/asynq"
 	"github.com/jackc/pgx/v5"
+	db "github.com/rizkiromadoni/simplebank/db/sqlc"
+	"github.com/rizkiromadoni/simplebank/util"
 	"github.com/rs/zerolog/log"
 )
 
@@ -51,7 +53,26 @@ func (p *RedisTaskProcessor) ProcessTaskSendVerifyEmail(c context.Context, task 
 		return fmt.Errorf("failed to get user: %w", err)
 	}
 
-	// TODO: send email
+	verifyEmail, err := p.store.CreateVerifyEmail(c, db.CreateVerifyEmailParams{
+		Username:   user.Username,
+		Email:      user.Email,
+		SecretCode: util.RandomString(32),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create verify email: %w", err)
+	}
+
+	// TODO: send verify email
+	verifyUrl := fmt.Sprintf("http://localhost:8080/v1/verify_email?email_id=%d&secret_code=%s",
+		verifyEmail.ID, verifyEmail.SecretCode)
+	subject := "verify your email"
+	content := fmt.Sprintf(`Hello %s, please verify your email address by clicking the link below.\n\n<a href="%s">Click Here</a>\n\nIf you did not request this, please ignore this email.\n`, user.Username, verifyUrl)
+	to := []string{user.Email}
+
+	err = p.mailer.SendEmail(subject, content, to, nil, nil, nil)
+	if err != nil {
+		return fmt.Errorf("failed to send email: %w", err)
+	}
 
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("email", user.Email).Msg("processed task")
 	return nil
