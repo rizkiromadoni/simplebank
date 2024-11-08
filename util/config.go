@@ -9,6 +9,7 @@ import (
 
 type Config struct {
 	Env                  string        `mapstructure:"ENV"`
+	AllowedOrigins       []string      `mapstructure:"ALLOWED_ORIGINS"`
 	DBURL                string        `mapstructure:"DB_URL"`
 	RedisAddress         string        `mapstructure:"REDIS_ADDRESS"`
 	HTTPServerAddr       string        `mapstructure:"HTTP_SERVER_ADDR"`
