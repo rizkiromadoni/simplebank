@@ -14,7 +14,7 @@ const (
 	authorizationTypeBearer = "bearer"
 )
 
-func (s *Server) authorizeUser(c context.Context) (*token.Payload, error) {
+func (s *Server) authorizeUser(c context.Context, accessibleRoles []string) (*token.Payload, error) {
 	mtdt, ok := metadata.FromIncomingContext(c)
 	if !ok {
 		return nil, fmt.Errorf("failed to get metadata")
@@ -34,5 +34,25 @@ func (s *Server) authorizeUser(c context.Context) (*token.Payload, error) {
 		return nil, fmt.Errorf("invalid authorization type")
 	}
 
-	return s.tokenMaker.VerifyToken(fields[1])
+	accessToken := fields[1]
+	payload, err := s.tokenMaker.VerifyToken(accessToken)
+	if err != nil {
+		return nil, fmt.Errorf("failed to verify token: %w", err)
+	}
+
+	if !hasPermission(payload.Role, accessibleRoles) {
+		return nil, fmt.Errorf("user does not have permission")
+	}
+
+	return payload, nil
+}
+
+func hasPermission(userRole string, accessibleRoles []string) bool {
+	for _, role := range accessibleRoles {
+		if userRole == role {
+			return true
+		}
+	}
+
+	return false
 }
