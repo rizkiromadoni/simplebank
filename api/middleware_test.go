@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/rizkiromadoni/simplebank/token"
+	"github.com/rizkiromadoni/simplebank/util"
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,7 +21,7 @@ func addAuthorizationHeader(
 	authorizationType string,
 	duration time.Duration,
 ) {
-	token, payload, err := tokenMaker.CreateToken(username, duration)
+	token, payload, err := tokenMaker.CreateToken(username, util.DepositorRole, duration)
 	require.NoError(t, err)
 	require.NotEmpty(t, payload)
 

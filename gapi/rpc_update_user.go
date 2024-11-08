@@ -16,7 +16,7 @@ import (
 )
 
 func (s *Server) UpdateUser(c context.Context, req *proto.UpdateUserRequest) (*proto.UpdateUserResponse, error) {
-	authPayload, err := s.authorizeUser(c)
+	authPayload, err := s.authorizeUser(c, []string{util.DepositorRole, util.BankerRole})
 	if err != nil {
 		return nil, unauthenticatedError(err)
 	}
@@ -26,7 +26,7 @@ func (s *Server) UpdateUser(c context.Context, req *proto.UpdateUserRequest) (*p
 		return nil, invalidArgumentError(violations)
 	}
 
-	if authPayload.Username != req.GetUsername() {
+	if authPayload.Role != util.BankerRole && authPayload.Username != req.GetUsername() {
 		return nil, status.Errorf(codes.PermissionDenied, "unauthorized user")
 	}
 

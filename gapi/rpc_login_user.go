@@ -33,12 +33,12 @@ func (s *Server) LoginUser(c context.Context, req *proto.LoginUserRequest) (*pro
 		return nil, status.Errorf(codes.Unauthenticated, "invalid password")
 	}
 
-	accessToken, accessPayload, err := s.tokenMaker.CreateToken(user.Username, s.config.AccessTokenDuration)
+	accessToken, accessPayload, err := s.tokenMaker.CreateToken(user.Username, user.Role, s.config.AccessTokenDuration)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create access token: %v", err)
 	}
 
-	refreshToken, refreshPayload, err := s.tokenMaker.CreateToken(user.Username, s.config.RefreshTokenDuration)
+	refreshToken, refreshPayload, err := s.tokenMaker.CreateToken(user.Username, user.Role, s.config.RefreshTokenDuration)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create refresh token: %v", err)
 	}
